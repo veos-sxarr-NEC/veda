@@ -138,7 +138,7 @@ VEDAresult vedaHMemcpyXtoDAsync(VEDAdeviceptr dst, void* src, size_t ByteCount, 
 		auto& ctx = veda::devices::get(dst).ctx();
 		L_TRACE("[ve:%i] vedaHMemcpyXtoDAsync(%p, %p, %llu, %i)", ctx.device().vedaId(), dst, src, ByteCount, hStream);
 		if(veo_is_ve_addr(src))
-			return veo_hmemcpy(ctx.getPtr(dst).ptr, src, ByteCount) == 0 ? VEDA_SUCCESS : VEDA_ERROR_INVALID_VALUE;
+			return veo_hmemcpy(veo_set_proc_identifier(ctx.getPtr(dst).ptr, ctx.aveoProcId()), src, ByteCount) == 0 ? VEDA_SUCCESS : VEDA_ERROR_INVALID_VALUE;
 		return vedaMemcpyHtoDAsync(dst, src, ByteCount, hStream);
 	)
 }
@@ -165,7 +165,8 @@ VEDAresult vedaHMemcpyDtoXAsync(void* dst, VEDAdeviceptr src, size_t ByteCount, 
 		auto& ctx = veda::devices::get(src).ctx();
 		L_TRACE("[ve:%i] vedaHMemcpyDtoXAsync(%p, %p, %llu, %i)", ctx.device().vedaId(), dst, src, ByteCount, hStream);
 		if(veo_is_ve_addr(dst))
-			return veo_hmemcpy(dst, ctx.getPtr(src).ptr, ByteCount) == 0 ? VEDA_SUCCESS : VEDA_ERROR_INVALID_VALUE;
+			return veo_hmemcpy(dst, veo_set_proc_identifier(ctx.getPtr(src).ptr, ctx.aveoProcId()), ByteCount) == 0 ? VEDA_SUCCESS : VEDA_ERROR_INVALID_VALUE;
+
 		return vedaMemcpyDtoHAsync(dst, src, ByteCount, hStream);
 	)
 }
