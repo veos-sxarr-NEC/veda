@@ -47,9 +47,13 @@ size_t Context::memUsed(void) {
 	syncPtrs();
 
 	size_t used = 0;
-	for(auto&& [idx, info] : m_ptrs)
-		used += info->size;
-	
+#ifndef NOCPP17
+        for(auto&& [idx, info] : m_ptrs)
+                used += info->size;
+#else
+        for(auto&&  info : m_ptrs)
+                used += info.second->size;
+#endif
 	return used;
 }
 
@@ -64,10 +68,17 @@ void Context::memReport(void) {
 	LOCK(mutex_ptrs);
 	// TODO: port to TUNGL
 	printf("# VE#%i %.2f/%.2fGB\n", device().vedaId(), used/(1024.0*1024.0*1024.0), total/(1024.0*1024.0*1024.0));
-	for(auto&& [idx, info] : m_ptrs) {
-		auto vptr = VEDA_SET_PTR(device().vedaId(), idx, 0);
-		printf("%p/%p %lluB\n", vptr, info->ptr, info->size);
-	}
+#ifndef NOCPP17
+        for(auto&& [idx, info] : m_ptrs) {
+                auto vptr = VEDA_SET_PTR(device().vedaId(), idx, 0);
+                printf("%p/%p %lluB\n", vptr, info->ptr, info->size);
+        }
+#else
+        for(auto&&  info : m_ptrs) {
+                auto vptr = VEDA_SET_PTR(device().vedaId(), info.first, 0);
+                printf("%p/%p %lluB\n", vptr, info.second->ptr, info.second->size);
+        }
+#endif
 	printf("\n");
 }
 
@@ -202,6 +213,7 @@ void Context::syncPtrs(void) {
 	bool syn = false;
 
 	// Don't lock mutex_ptrs here, as ALL calling functions do this on behalf of this
+#ifndef NOCPP17
 	for(auto&& [idx, info] : m_ptrs) {
 		if(info->ptr == 0) {
 			// if size is == 0, then no malloc call had been issued, so we need to fetch the info
@@ -215,7 +227,22 @@ void Context::syncPtrs(void) {
 			syn = true;
 		}
 	}
-	
+#else
+	for(auto&& info : m_ptrs) {
+		if(info.second->ptr == 0) {
+			// if size is == 0, then no malloc call had been issued, so we need to fetch the info
+			// is size is != 0, then we only need to wait till the malloc reports back the ptr
+			if(info.second->size == 0) {
+				auto vptr = VEDA_SET_PTR(device().vedaId(), info.first, 0);
+				auto s = stream(0);
+				s->enqueue(false, (uint64_t*)&info.second->ptr,  kernel(VEDA_KERNEL_MEM_PTR),  vptr);
+				s->enqueue(false, (uint64_t*)&info.second->size, kernel(VEDA_KERNEL_MEM_SIZE), vptr);
+			}
+			syn = true;
+		}
+	}
+
+#endif	
 	// sync all streams as we don't know which mallocs are in flight in a different stream
 	if(syn)
 		sync();
@@ -463,10 +490,17 @@ void Context::destroy(void) {
 	syncPtrs();
 
 	if(veda::isMemTrace()) {
+#ifndef NOCPP17
 		for(auto&& [idx, info] : m_ptrs) {
 			auto vptr = (VEDAdeviceptr)(VEDA_SET_PTR(device().vedaId(), idx, 0));
 			printf("[VEDA ERROR]: VEDAdeviceptr %p with size %lluB has not been freed!\n", vptr, info->size);
 		}
+#else
+		for(auto&& info : m_ptrs) {
+			auto vptr = (VEDAdeviceptr)(VEDA_SET_PTR(device().vedaId(), info.first, 0));
+			printf("[VEDA ERROR]: VEDAdeviceptr %p with size %lluB has not been freed!\n", vptr, info.second->size);
+		}
+#endif
 	}
 	
 	if(m_handle) {
@@ -479,8 +513,13 @@ void Context::destroy(void) {
 	m_streams.clear();	// don't need to be destroyed
 	m_modules.clear();	// don't need to be destroyed
 	m_kernels.clear();	// don't need to be destroyed
-	for(auto&& [idx, info] : m_ptrs)
-		delete info;
+#ifndef NOCPP17
+        for(auto&& [idx, info] : m_ptrs)
+                delete info;
+#else
+        for(auto&& info : m_ptrs)
+                delete info.second;
+#endif
 	m_ptrs.clear();
 	m_lib		= 0;
 	m_mode		= VEDA_CONTEXT_MODE_OMP;

@@ -19,4 +19,8 @@ typedef struct VEDAdeviceptrInfo_struct {
 #endif
 } VEDAdeviceptrInfo;
 
+#ifndef NOCPP17
 static_assert(sizeof(VEDAdeviceptrInfo) == 16);
+#else
+static_assert(sizeof(VEDAdeviceptrInfo) == 16,"VEDAdeviceptrInfo size on matched");
+#endif

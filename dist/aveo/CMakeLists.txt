@@ -6,9 +6,10 @@ SET(AVEO_NFORT		"/opt/nec/ve/bin/nfort" CACHE STRING "NFORT Version used to comp
 CONFIGURE_FILE(${CMAKE_CURRENT_LIST_DIR}/aveo.patch ${CMAKE_CURRENT_BINARY_DIR}/aveo.patch @ONLY)
 
 INCLUDE(ExternalProject)
+IF(NOCPP17)
 ExternalProject_Add(aveo
 	BINARY_DIR		${AVEO_PATH}/src
-	BUILD_COMMAND		make
+	BUILD_COMMAND		make NOCPP17=1
 	CONFIGURE_COMMAND	""
 	GIT_REPOSITORY		${AVEO_REPO}
 	GIT_SHALLOW		FALSE
@@ -22,6 +23,24 @@ ExternalProject_Add(aveo
 	TMP_DIR			${AVEO_PATH}/tmp
 	UPDATE_DISCONNECTED 	TRUE
 )
+ELSE()
+ExternalProject_Add(aveo
+        BINARY_DIR              ${AVEO_PATH}/src
+        BUILD_COMMAND           make
+        CONFIGURE_COMMAND       ""
+        GIT_REPOSITORY          ${AVEO_REPO}
+        GIT_SHALLOW             FALSE
+        GIT_TAG                 ${AVEO_GIT_TAG}
+        INSTALL_COMMAND         make install
+        INSTALL_DIR             ""
+        PATCH_COMMAND           git apply ${CMAKE_CURRENT_BINARY_DIR}/aveo.patch
+        PREFIX                  ${AVEO_PATH}
+        SOURCE_DIR              ${AVEO_PATH}/src
+        STAMP_DIR               ${AVEO_PATH}/stamp
+        TMP_DIR                 ${AVEO_PATH}/tmp
+        UPDATE_DISCONNECTED     TRUE
+)
+ENDIF()
 
 SET(AVEO_INCLUDE_DIRS	"${AVEO_PATH}/src/src/")
 SET(AVEO_LIBRARY	"${AVEO_PATH}/src/install/lib64/libveo.so.1.0.0")

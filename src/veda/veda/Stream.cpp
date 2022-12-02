@@ -44,6 +44,7 @@ void Stream::enqueue(const bool checkResult, uint64_t* result, VEDAfunction func
 
 //------------------------------------------------------------------------------
 void Stream::sync(void) {
+#ifndef NOCPP17
 	for(auto&& [id, checkResult, result] : m_calls) {
 		auto res = wait(id);
 
@@ -55,7 +56,22 @@ void Stream::sync(void) {
 			VEDA_ASSERT(veda == VEDA_SUCCESS, veda);
 		}
 	}
-	
+#else
+        for(auto& it : m_calls) {
+                auto id                 = std::get<0>(it);
+                auto checkResult        = std::get<1>(it);
+                auto ptr                = std::get<2>(it);
+	        auto res = wait(id);
+
+                VEDAresult _res = (VEDAresult)res;
+
+                if(ptr)
+                       *ptr = res;
+		
+		if(checkResult && _res != VEDA_SUCCESS)
+                       VEDA_THROW(_res);
+	}
+#endif	
 	m_calls.clear();
 }
 

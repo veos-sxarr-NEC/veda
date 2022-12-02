@@ -197,11 +197,20 @@ VEDAresult vedaMemAllocPitch(VEDAdeviceptr* dptr, size_t* pPitch, size_t WidthIn
  */
 VEDAresult vedaMemAllocPitchAsync(VEDAdeviceptr* dptr, size_t* pPitch, size_t WidthInBytes, size_t Height, uint32_t ElementSizeByte, VEDAstream stream) {
 	GUARDED(
-		auto ctx = veda::contexts::current();
-		auto&& [ptr, pitch] = ctx->memAllocPitch(WidthInBytes, Height, ElementSizeByte, stream);
-		*dptr	= ptr;
-		*pPitch	= pitch;
-		L_TRACE("[ve:%i] vedaMemAllocPitchAsync(%p, %llu, %llu, %llu, %u, %i)", ctx->device().vedaId(), *dptr, *pPitch, WidthInBytes, Height, ElementSizeByte, stream);
+#ifndef NOCPP17
+                auto ctx = veda::Contexts::current();
+                auto&& [ptr, pitch] = ctx->memAllocPitch(WidthInBytes, Height, ElementSizeByte, stream);
+                *dptr   = ptr;
+                *pPitch = pitch;
+                L_TRACE("[ve:%i] vedaMemAllocPitchAsync(%p, %llu, %llu, %llu, %u, %i)", ctx->device().vedaId(), *dptr, *pPitch, WidthInBytes, Height, ElementSizeByte, stream);
+#else
+                VEDAdeviceptr ptr;
+                size_t pitch;
+                std::tie(ptr, pitch)  = veda::contexts::current()->memAllocPitch(WidthInBytes, Height, ElementSizeByte, stream);
+                *dptr   = ptr;
+                *pPitch = pitch;
+                //L_TRACE("[ve:%i] vedaMemAllocPitchAsync(%p, %llu, %llu, %llu, %u, %i)", ctx->device().vedaId(), *dptr, *pPitch, WidthInBytes, Height, ElementSizeByte, stream);
+#endif
 	)
 }
 

@@ -27,7 +27,11 @@ static inline void vedaMemsetAlign(T*& ptr, const T value, size_t& cnt) {
 //------------------------------------------------------------------------------
 template<typename T>
 static inline void vedaMemsetOMPBatched(T*& ptr, const T value, size_t& cnt) {
+#ifndef NOCPP17
 	static_assert(sizeof(T) > 1 && sizeof(T) < 8);
+#else
+        static_assert(sizeof(T) > 1 && sizeof(T) < 8,"vedaMemsetOMPBatched size not matched");
+#endif
 	const T raw[]	= {value, value, value, value};
 	auto batchValue	= ((const uint64_t*)raw)[0];
 
@@ -43,7 +47,11 @@ static inline void vedaMemsetOMPBatched(T*& ptr, const T value, size_t& cnt) {
 //------------------------------------------------------------------------------
 template<typename T>
 static inline void vedaMemsetBatched(T*& ptr, const T value, size_t& cnt) {
+#ifndef NOCPP17
 	static_assert(sizeof(T) > 1 && sizeof(T) < 8);
+#else 
+        static_assert(sizeof(T) > 1 && sizeof(T) < 8,"vedaMemsetBatched size on matched"); 
+#endif
 	T raw[]		= {value, value, value, value};
 	auto batchValue	= ((const uint64_t*)raw)[0];
 

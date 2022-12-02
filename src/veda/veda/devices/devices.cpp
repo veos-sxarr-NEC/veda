@@ -117,7 +117,11 @@ static void initMapping(const std::set<int>& devices) {
 		int numaCnt = readSensor(sensorId, "partitioning_mode", false) ? 2 : 1;
 
 		for(int numaId = 0; numaId < numaCnt; numaId++) {
+#ifndef NOCPP17
 			if(visible.size() && visible.find({aveoId, numaId}) == visible.end())
+#else
+                        if(visible.size() && visible.find(std::tuple <int, int> {aveoId, numaId}) == visible.end())
+#endif
 				continue;
 
 			auto vedaId = (VEDAdevice)s_devices.size();

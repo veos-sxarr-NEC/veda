@@ -304,7 +304,12 @@ int main(int argc, char** argv) {
 	for(VEDAstream stream : streams)
 	{
 		vedaArgsSetU64(args, 0, stream);
-		CHECK(vedaLaunchKernelEx(func, stream, args, 0, &res.emplace_back()));
+#ifndef NOCPP17
+                CHECK(vedaLaunchKernelEx(func, stream, args, 0, &res.emplace_back()));
+#else
+                uint64_t *result;
+                CHECK(vedaLaunchKernelEx(func, stream, args, 0, result));
+#endif
 	}
 	if( -1 != vedaCtxSynchronize())
 	{

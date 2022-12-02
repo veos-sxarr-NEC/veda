@@ -16,8 +16,15 @@ template<>		inline	size_t veda_omp_vlen<double>	(void)	{ return 256; }
 //------------------------------------------------------------------------------
 template<typename T, typename F>
 inline void veda_omp_check(void) {
+#ifndef NOCPP17
 	static_assert(std::is_same<T, int32_t>::value || std::is_same<T, int64_t>::value || std::is_same<T, size_t>::value);
 	static_assert(std::is_convertible<F, std::function<void(const T, const T)>>::value);
+#else
+        static_assert(std::is_same<T, int32_t>::value || std::is_same<T, int64_t>::value ||
+               std::is_same<T, size_t>::value,"veda_omp_check size on matched");
+        static_assert(std::is_convertible<F, std::function<void(const T, const T)>>::value,
+               "veda_omp_check function not matched ");
+#endif
 }
 
 #ifdef _OPENMP
