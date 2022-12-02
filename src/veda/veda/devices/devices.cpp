@@ -1,5 +1,5 @@
 #include <veda/internal.h>
-#include <veo_hmem_macros.h>
+#include <veo_hmem.h>
 
 #define SYS_CLASS_VE_BUFFER_SIZE 128
 
@@ -201,10 +201,10 @@ uint64_t readSensor(const int sensorId, const char* file, const bool isHex) {
 
 //------------------------------------------------------------------------------
 Device& get(const VEDAhmemptr ptr) {
-	if(!ptr || !IS_VE(ptr))
+	if(!ptr || !veo_is_ve_addr(ptr))
 		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
 
-	auto aveoProcId = GET_PROC_IDENT(ptr);
+	auto aveoProcId = veo_get_proc_identifier_from_hmem(ptr);
 	if(aveoProcId < 0 || aveoProcId >= VEO_MAX_HMEM_PROCS)
 		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
 
