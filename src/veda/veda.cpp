@@ -148,6 +148,30 @@ VEDAresult vedaLaunchHostFuncEx(VEDAstream stream, VEDAhost_function fn, void* u
 	)
 }
 
+//------------------------------------------------------------------------------
+/**
+ * This function is used as backward compatibility for vedaLaunchKernelEx() in
+ * version 2.12.1 and above.
+ *
+ * @brief Enqueues a VEDA device function f on the VEDA device with flexibility.
+ * @param f Handle to VEDA Device function to launch.
+ * @param stream Stream Identifier.
+ * @param args Handle to the VEDA device parameters.
+ * @param destroyArgs Set 1 if the VEDA arguement needs to be destroyed after VEDA
+ * device function is called else 0.
+ * @retval VEDA_SUCCESS on Success
+ * @retval VEDA_ERROR_NOT_INITIALIZED VEDA library not initialized
+ * @retval VEDA_ERROR_UNKNOWN_CONTEXT VEDA context is not set for the calling thread.
+ * @retval VEDA_ERROR_CONTEXT_IS_DESTROYED VEDA current context is already destroyed.
+ */
+VEDAresult vedaLaunchKernelEx_compat(VEDAfunction f, VEDAstream stream, VEDAargs args, const int destroyArgs) {
+        GUARDED(
+                auto ctx = veda::contexts::current();
+                L_TRACE("[ve:%i] vedaLaunchKernelEx(%p, %i, ..., %i)", ctx->device().vedaId(), f, stream, destroyArgs);
+                ctx->call(f, stream, args, destroyArgs != 0, false, NULL);
+        )
+}
+
 /** @} */
 //------------------------------------------------------------------------------
 } // extern "C"

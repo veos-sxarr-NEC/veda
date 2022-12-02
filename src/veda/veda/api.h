@@ -85,6 +85,7 @@ VEDAresult	vedaStreamAddCallback		(VEDAstream stream, VEDAstream_callback callba
 VEDAresult	vedaStreamGetFlags		(VEDAstream hStream, uint32_t* flags);
 VEDAresult	vedaStreamQuery			(VEDAstream hStream);
 VEDAresult	vedaStreamSynchronize		(VEDAstream hStream);
+VEDAresult      vedaLaunchKernelEx_compat       (VEDAfunction f, VEDAstream stream, VEDAargs args, const int destroyArgs);
 
 // VEDAhmemptr API -------------------------------------------------------------
 VEDAresult	vedaArgsSetHMEM			(VEDAargs args, const int idx, const VEDAhmemptr value);
