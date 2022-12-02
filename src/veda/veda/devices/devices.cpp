@@ -9,7 +9,7 @@ namespace veda {
 // Static
 //------------------------------------------------------------------------------
 static std::deque<Device>	s_devices;
-static std::vector<Device*>	s_mapping(VEO_MAX_HMEM_PROCS);
+static std::vector<Device*>	s_mapping(veo_get_max_proc_identifier());
 
 //------------------------------------------------------------------------------
 static void initCount(std::set<int>& devices) {
@@ -205,7 +205,7 @@ Device& get(const VEDAhmemptr ptr) {
 		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
 
 	auto aveoProcId = veo_get_proc_identifier_from_hmem(ptr);
-	if(aveoProcId < 0 || aveoProcId >= VEO_MAX_HMEM_PROCS)
+	if(aveoProcId < 0 || aveoProcId >= veo_get_max_proc_identifier())
 		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
 
 	auto& ref = s_mapping[aveoProcId];
@@ -217,7 +217,7 @@ Device& get(const VEDAhmemptr ptr) {
 
 //------------------------------------------------------------------------------
 void map(const int aveoProcId, Device& dev) {
-	ASSERT(aveoProcId >= 0 && aveoProcId < VEO_MAX_HMEM_PROCS);
+	ASSERT(aveoProcId >= 0 && aveoProcId < veo_get_max_proc_identifier());
 	auto& ref = s_mapping[aveoProcId];
 	assert(ref == 0);
 	ref = &dev;
