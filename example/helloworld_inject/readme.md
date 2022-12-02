@@ -6,7 +6,7 @@ If you have an existing CPU application, you can use the ```InjectVE.cmake``` fr
 ```bash
 mkdir build
 cd build
-cmake -D /usr/local/ve/veda/cmake/InjectVE.cmake ..
+cmake -D /opt/nec/ve/share/veda/cmake/InjectVE.cmake ..
 make
 ```
 
