@@ -529,15 +529,15 @@ void Context::destroy(void) {
 //------------------------------------------------------------------------------
 // Memset
 //------------------------------------------------------------------------------
-#define VEDA_MEMSET()\
-	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 1, VEDA_KERNEL_MEMSET_U8)\
-	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 2, VEDA_KERNEL_MEMSET_U16)\
-	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 4, VEDA_KERNEL_MEMSET_U32)\
-	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 8, VEDA_KERNEL_MEMSET_U64)\
-	VEDA_MEMSET_KERNEL(VEDAhmemptr, 1, VEDA_KERNEL_RAW_MEMSET_U8)\
-	VEDA_MEMSET_KERNEL(VEDAhmemptr, 2, VEDA_KERNEL_RAW_MEMSET_U16)\
-	VEDA_MEMSET_KERNEL(VEDAhmemptr, 4, VEDA_KERNEL_RAW_MEMSET_U32)\
-	VEDA_MEMSET_KERNEL(VEDAhmemptr, 8, VEDA_KERNEL_RAW_MEMSET_U64)
+#define VEDA_MEMSET(suffix)\
+	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 1, VEDA_KERNEL_MEMSET_U8 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 2, VEDA_KERNEL_MEMSET_U16 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 4, VEDA_KERNEL_MEMSET_U32 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAdeviceptr, 8, VEDA_KERNEL_MEMSET_U64 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAhmemptr, 1, VEDA_KERNEL_RAW_MEMSET_U8 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAhmemptr, 2, VEDA_KERNEL_RAW_MEMSET_U16 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAhmemptr, 4, VEDA_KERNEL_RAW_MEMSET_U32 ## suffix)\
+	VEDA_MEMSET_KERNEL(VEDAhmemptr, 8, VEDA_KERNEL_RAW_MEMSET_U64 ## suffix)
 
 #define VEDA_MEMSET_KERNEL(d, t, k) \
 template<typename D, typename T>\
@@ -555,7 +555,7 @@ inline typename std::enable_if<std::is_same<D, d>::value && (sizeof(T)) == t, Ke
 	return k;\
 }
 
-VEDA_MEMSET()
+VEDA_MEMSET(_2D)
 #undef VEDA_MEMSET_KERNEL
 #undef VEDA_MEMSET
 
@@ -590,7 +590,7 @@ template void Context::memset<VEDAhmemptr>  (VEDAhmemptr,   const uint64_t, cons
 //------------------------------------------------------------------------------
 template<typename D, typename T>
 void Context::memset2D(D dst, const size_t pitch, const T value, const size_t w, const size_t h, VEDAstream _stream) {
-	stream(_stream)->enqueue(true, 0, memset2d_kernel<D, T>(), dst, pitch, value, w, h);
+	stream(_stream)->enqueue(true, 0, kernel(memset2d_kernel<D, T>()), dst, pitch, value, w, h);
 }
 
 template void Context::memset2D<VEDAdeviceptr, uint8_t> (VEDAdeviceptr, const size_t, const uint8_t,  const size_t, const size_t, VEDAstream);
