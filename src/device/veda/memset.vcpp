@@ -99,6 +99,14 @@ static inline void vedaMemsetD2DX(T* _ptr, const size_t pitch, const T value, co
 
 //------------------------------------------------------------------------------
 extern "C" {
+// implementation of VEDA API functions
+/**
+ * \defgroup vedaapi VEDA API
+ *
+ * To use VEDA API functions, include "veda.h" header.
+ */
+/** @{ */
+
 //------------------------------------------------------------------------------
 // 1D MemSet
 //------------------------------------------------------------------------------
@@ -114,6 +122,13 @@ VEDAresult vedaMemsetD8(void* ptr, const uint8_t  value, const size_t cnt) {
 }
 
 //------------------------------------------------------------------------------
+/**
+ * @brief  Gets the Error name matching error code.
+ * @param error Error code.
+ * @param pStr  Pointer to error string corresponding to Error Code.
+ * @retval VEDA_SUCCESS on Success
+ * @retval VEDA_ERROR_UNKNOWN  This is  set when error doesn't match.
+ */
 VEDAresult vedaMemsetD16(void* ptr, const uint16_t value, const size_t cnt) {
 	vedaMemsetDX((uint16_t*)ptr, value, cnt);
 	return VEDA_SUCCESS;

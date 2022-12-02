@@ -483,6 +483,6 @@ VEDAresult vedaDevicePrimaryCtxRetain(VEDAcontext* pctx, VEDAdevice dev) {
 		L_TRACE("[ve:%i] vedaDevicePrimaryCtxRetain(%i)", dev, dev);
 	)
 }
-
+/** @} */
 //------------------------------------------------------------------------------
 } // extern "C"

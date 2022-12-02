@@ -81,9 +81,7 @@ VEDAresult vedaMemAlloc(VEDAdeviceptr* ptr, size_t size) {
 //------------------------------------------------------------------------------
 /**
  * @brief Overrides the pointer returned by the next call to vedaMemAllocAsync.
- * @param size Requested allocation size in bytes.
- * @param stream The stream establishing the stream ordering contract and the
- * memory pool to allocate from
+ * @param ptr Pointer of type VEDAdeviceptr to override
  * @retval VEDA_SUCCESS on Success
  * @retval VEDA_ERROR_NOT_INITIALIZED VEDA library not initialized
  * @retval VEDA_ERROR_INVALID_DEVICE VEDA device id is not valid.
@@ -607,6 +605,6 @@ VEDAresult vedaMemSize(size_t* size, VEDAdeviceptr vptr) {
 		L_TRACE("[ve:%i] vedaMemSize(%llu, %p)", ctx.device().vedaId(), *size, vptr);
 	)
 }
-
+/** @} */
 //------------------------------------------------------------------------------
 } // extern "C"

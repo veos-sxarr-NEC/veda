@@ -47,3 +47,4 @@ inline typename std::enable_if<!std::is_enum<T>::value && !std::is_pointer<T>::v
 	static_assert(std::is_same<T, bool>::value, "You can't pass values of type bool to vedaArgsSet, as sizeof(bool) is 1B on VH and 4B on VE.");
 	return vedaArgsSetStack(args, idx, &value, VEDA_ARGS_INTENT_IN, sizeof(T));
 }
+

@@ -23,7 +23,7 @@ extern "C" {
 VEDAresult vedaModuleGetFunction(VEDAfunction* hfunc, VEDAmodule hmod, const char* name) {
 	GUARDED(
 		if(!hmod || !hfunc || !name)
-			return VEDA_ERROR_INVALID_ARGS;
+        		return VEDA_ERROR_INVALID_ARGS;
 		*hfunc = hmod->getFunction(name);
 		L_TRACE("[ve:%i] vedaModuleGetFunction(%p, %p, %s)", hmod->ctx()->device().vedaId(), *hfunc, hmod, name);
 	)
@@ -61,6 +61,6 @@ VEDAresult vedaModuleUnload(VEDAmodule hmod) {
 		hmod->ctx()->moduleUnload(hmod);
 	)
 }
-
+/** @} */
 //------------------------------------------------------------------------------
 } // extern "C"

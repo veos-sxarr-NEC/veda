@@ -1,12 +1,19 @@
 #include <veda/internal.h>
 
 extern "C" {
+/** @{ */
 //------------------------------------------------------------------------------
+/**
+ * @brief Return the latest VEDA version.
+ * @param str Pointer to hold the VEDA version.
+ * @retval VEDA_SUCCESS on Success
+ * @retval VEDA_ERROR_NOT_INITIALIZED VEDA library not initialized
+ */
 VEDAresult vedaGetVersion(const char** str) {
 	*str = "${VEDA_VERSION}";
 	L_TRACE("vedaGetVersion(%s)", *str);
 	return VEDA_SUCCESS;
 }
-
+/** @} */
 //------------------------------------------------------------------------------
 }

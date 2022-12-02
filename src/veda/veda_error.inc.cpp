@@ -1,3 +1,19 @@
+extern "C" {
+// implementation of VEDA API functions
+/**
+ * \defgroup vedaapi VEDA API
+ *
+ * To use VEDA API functions, include "veda.h" header.
+ */
+/** @{ */
+//------------------------------------------------------------------------------
+/**
+ * @brief  Gets the Error name matching error code.
+ * @param error Error code.
+ * @param pStr  Pointer to error string corresponding to Error Code.
+ * @retval VEDA_SUCCESS on Success
+ * @retval VEDA_ERROR_UNKNOWN  This is set when error doesn't match.
+ */
 VEDAresult vedaGetErrorName(VEDAresult error, const char** pStr) {
 	switch(error) {
 		case VEDA_ERROR_ALREADY_INITIALIZED:			*pStr = "VEDA_ERROR_ALREADY_INITIALIZED";		return VEDA_SUCCESS;
@@ -57,7 +73,17 @@ VEDAresult vedaGetErrorName(VEDAresult error, const char** pStr) {
 	*pStr = "VEDA_ERROR_UNKNOWN";
 	return VEDA_ERROR_UNKNOWN;
 }
-
+//------------------------------------------------------------------------------
+/**
+ * @brief  Gets the Error string matching error code
+ * @param  error Error Code.
+ * @param  pStr  Pointer to error string corresponding to Error Code.
+ * @retval VEDA_SUCCESS on Success
+ * @retval VEDA_ERROR_UNKNOWN  This is set when error doesn't match.
+ */
 VEDAresult vedaGetErrorString(VEDAresult error, const char** pStr) {
 	return vedaGetErrorName(error, pStr);
 }
+/** @} */
+//------------------------------------------------------------------------------
+} // extern "C"

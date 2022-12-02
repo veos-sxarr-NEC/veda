@@ -170,6 +170,6 @@ VEDAresult vedaHMemcpyDtoXAsync(void* dst, VEDAdeviceptr src, size_t ByteCount, 
 		return vedaMemcpyDtoHAsync(dst, src, ByteCount, hStream);
 	)
 }
-
+/** @} */
 //------------------------------------------------------------------------------
 } // extern "C"

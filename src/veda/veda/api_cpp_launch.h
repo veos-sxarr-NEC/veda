@@ -5,7 +5,8 @@ inline VEDAresult __vedaLaunchKernel(VEDAfunction func, VEDAstream stream, uint6
 }
 
 template<typename T, typename... Args>
-inline VEDAresult __vedaLaunchKernel(VEDAfunction func, VEDAstream stream, uint64_t* result, VEDAargs args, const int idx, const T value, Args... vargs) {
+inline VEDAresult __vedaLaunchKernel(VEDAfunction func, VEDAstream stream, uint64_t* result, VEDAargs args, const int idx, const T value
+, Args... vargs) {
 	CVEDA(vedaArgsSet(args, idx, value));
 	return __vedaLaunchKernel(func, stream, result, args, idx+1, vargs...);
 }
