@@ -16,7 +16,7 @@ extern "C" {
  * @param name Name of the VEDA device function for which the VE address is required.
  * @return VEDA_SUCCESS on Success
  * @return VEDA_ERROR_NOT_INITIALIZED If VEDA device is not initialized.
- * @return VEDA_ERROR_INVALID_VALUE In case the name of the VEDA device function is passed as NULL.
+ * @return VEDA_ERROR_INVALID_ARGS In case the name of the VEDA device function is passed as NULL.
  * @return VEDA_ERROR_FUNCTION_NOT_FOUND Internal error from the AVEO library
  */
 //------------------------------------------------------------------------------

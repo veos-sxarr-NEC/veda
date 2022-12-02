@@ -97,9 +97,9 @@ VEDAresult vedaHMemcpyXtoD(VEDAdeviceptr dst, void* src, size_t ByteCount) {
 
 //------------------------------------------------------------------------------
 /**
- * @brief Copies Memory from HMEM to VEDA Device.
- * @param dst Destination device pointer.
- * @param src Source HMEM pointer.
+ * @brief Copies Memory from VEDA device to HMEM.
+ * @param dst Destination HMEM pointer.
+ * @param src Source device pointer.
  * @param ByteCount Size of memory copy in bytes.
  * @retval VEDA_SUCCESS on Success
  * @retval VEDA_ERROR_NOT_INITIALIZED VEDA library not initialized
@@ -107,7 +107,7 @@ VEDAresult vedaHMemcpyXtoD(VEDAdeviceptr dst, void* src, size_t ByteCount) {
  * @retval VEDA_ERROR_UNKNOWN_CONTEXT VEDA context is not set for the calling thread.
  * @retval VEDA_ERROR_CONTEXT_IS_DESTROYED VEDA current context is already destroyed.\n 
  *
- * Copies from HMEM memory to device. dst and src are the base
+ * Copies from VEDA device to HMEM memory. dst and src are the base
  * pointers of the destination and source, respectively. ByteCount specifies the
  * number of bytes to copy.
  */
