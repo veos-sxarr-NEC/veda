@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	VEDAmodule mod;
 	printf("\nTEST CASE ID: FT_VEDA_HMEM_21 vedaHMemPtr\n\n");
 	
-	const char* modName = "libve_hmem_ptr.vso";
+	const char* modName = "./libve_hmem_ptr.vso";
 	CHECK(vedaModuleLoad(&mod, modName));
 	printf("vedaModuleLoad(%p, \"%s\")\n", mod, modName);
 

@@ -277,7 +277,7 @@ int main(int argc, char** argv) {
 	}
 	printf("TEST CASE ID: FT_VEDA_CONTEXT_18\n");
 	VEDAmodule mod;
-	const char* modName = "libveda_test.vso";
+	const char* modName = "./libveda_test.vso";
 	CHECK(vedaModuleLoad(&mod, modName));
 	VEDAfunction func;
 	const char* funcName = "ve_hello_world";

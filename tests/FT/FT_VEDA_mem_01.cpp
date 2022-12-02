@@ -140,75 +140,110 @@ int main(int argc, char** argv) {
 			exit(0);
 		}
 	}
+	printf("\nTesting For vedaMemsetD2* APIs ......\n");
+        {
+	size_t size_d2d8 = sizeof(int8_t)*w*h;
+	size_t size_d2d16 = sizeof(int16_t)*w*h;
+	size_t size_d2d32 = sizeof(int32_t)*w*h;
+	size_t size_d2d64 = sizeof(int64_t)*w*h;
+	size_t size_d2d128 = 2*sizeof(int64_t)*w*h;
+	int8_t *host_d2d8;
+	int16_t *host_d2d16;
+	int32_t *host_d2d32;
+	int64_t *host_d2d64;
+	int64_t *host_d2d128;
+	host_d2d8 = (int8_t*)malloc(size_d2d8);
+	host_d2d16 = (int16_t*)malloc(size_d2d16);
+	host_d2d32 = (int32_t*)malloc(size_d2d32);
+	host_d2d64 = (int64_t*)malloc(size_d2d64);
+	host_d2d128 = (int64_t*)malloc(size_d2d128);
+	memset(host_d2d8, 0x00, size_d2d8);
+	memset(host_d2d16, 0x00, size_d2d16);
+	memset(host_d2d32, 0x00, size_d2d32);
+	memset(host_d2d64, 0x00, size_d2d64);
+	memset(host_d2d128, 0x00, size_d2d128);
+	VEDAptr<int8_t> ptr_d2d8 = 0;
+	VEDAptr<int16_t> ptr_d2d16 = 0;
+	VEDAptr<int32_t> ptr_d2d32 = 0;
+	VEDAptr<int64_t> ptr_d2d64 = 0;
+	VEDAptr<int64_t> ptr_d2d128 = 0;
 
-
-#if 0
-	host_2d = (int8_t*)malloc(sizeof(int64_t) *w*h);
-	{
-		printf("\nTEST CASE ID: FT_VEDA_MEM_08\n");
-		memset(host_2d, 0x00, sizeof(int8_t) *w*h);
-		CHECK(vedaMemsetD2D8(ptr_2d, pitch_size, (int8_t)0x12, w, h));
-		CHECK(vedaMemcpyDtoH(host_2d, ptr_2d, sizeof(int8_t) *w*h));
-		auto h8 = (int8_t*)host_2d;
-		for(size_t W = 0; W < w; W++) {
-			for(size_t H = 0; H < h; H++) {
-				if(h8[W + H * pitch_size] != 0x12) {
-					printf("TEST CASE ID: FT_VEDA_MEM_08 failed\n");
-					exit(0);
-				}
-			}
-		}
+	printf("\nTEST CASE ID: FT_VEDA_MEM_08\n");
+	CHECK(vedaMemAlloc(&ptr_d2d8,size_d2d8));
+	CHECK(vedaMemsetD2D8(ptr_d2d8, pitch_size, 0x12, w, h));
+	CHECK(vedaMemcpyDtoH(host_d2d8, ptr_d2d8, size_d2d8));
+	auto hd8 = (int8_t*)host_d2d8;
+	for(size_t W = 0; W < w; W++) {
+            for(size_t H = 0; H < h; H++) {
+                if(hd8[W + H * pitch_size] != 0x12) {
+			printf("TEST CASE ID: FT_VEDA_MEM_08 failed\n");
+			exit(0);
+                 }
+             }
+        }
+	printf("\nTEST CASE ID: FT_VEDA_MEM_09\n");
+	CHECK(vedaMemAlloc(&ptr_d2d16,size_d2d16));
+	CHECK(vedaMemsetD2D16(ptr_d2d16, pitch_size, 0x1234, w, h));
+	CHECK(vedaMemcpyDtoH(host_d2d16, ptr_d2d16, size_d2d16));
+	auto hd16 = (int16_t*)host_d2d16;
+	for(size_t W = 0; W < w; W++) {
+            for(size_t H = 0; H < h; H++) {
+                if(hd16[W + H * pitch_size] != 0x1234) {
+			printf("TEST CASE ID: FT_VEDA_MEM_09 failed\n");
+			exit(0);
+                 }
+             }
+        }
+	printf("\nTEST CASE ID: FT_VEDA_MEM_10\n");
+	CHECK(vedaMemAlloc(&ptr_d2d32,size_d2d32));
+	CHECK(vedaMemsetD2D32(ptr_d2d32, pitch_size, 0x12345678u, w, h));
+	CHECK(vedaMemcpyDtoH(host_d2d32, ptr_d2d32, size_d2d32));
+	auto hd32 = (int32_t*)host_d2d32;
+	for(size_t W = 0; W < w; W++) {
+            for(size_t H = 0; H < h; H++) {
+                if(hd32[W + H * pitch_size] != 0x12345678u) {
+			printf("TEST CASE ID: FT_VEDA_MEM_10 failed\n");
+			exit(0);
+                 }
+             }
+        }
+	printf("\nTEST CASE ID: FT_VEDA_MEM_11\n");
+	CHECK(vedaMemAlloc(&ptr_d2d64,size_d2d64));
+	CHECK(vedaMemsetD2D64(ptr_d2d64, pitch_size, 0x0123456789ABCDEFull, w, h));
+	CHECK(vedaMemcpyDtoH(host_d2d64, ptr_d2d64, size_d2d64));
+	auto hd64 = (int64_t*)host_d2d64;
+	for(size_t W = 0; W < w; W++) {
+            for(size_t H = 0; H < h; H++) {
+                if(hd64[W + H * pitch_size] != 0x0123456789ABCDEFull) {
+			printf("TEST CASE ID: FT_VEDA_MEM_11  failed\n");
+			exit(0);
+                 }
+             }
+        }
+	printf("\nTEST CASE ID: FT_VEDA_MEM_11\n");
+	CHECK(vedaMemAlloc(&ptr_d2d128,size_d2d128));
+	CHECK(vedaMemsetD2D128(ptr_d2d128, pitch_size, 0x0123456789ABCDEFull, 0x0123456789ABCDEFull, w, h));
+	CHECK(vedaMemcpyDtoH(host_d2d128, ptr_d2d128, size_d2d128));
+	auto hd128 = (int64_t*)host_d2d128;
+	for(size_t W = 0; W < w; W++) {
+            for(size_t H = 0; H < h; H++) {
+                if(hd128[W + H * pitch_size] != 0x0123456789ABCDEFull) {
+			printf("TEST CASE ID: FT_VEDA_MEM_11 failed\n");
+			exit(0);
+                 }
+             }
+        }
+	CHECK(vedaMemFree(ptr_d2d8));
+	CHECK(vedaMemFree(ptr_d2d16));
+	CHECK(vedaMemFree(ptr_d2d32));
+	CHECK(vedaMemFree(ptr_d2d64));
+	CHECK(vedaMemFree(ptr_d2d128));
+	free(host_d2d8);
+	free(host_d2d16);
+	free(host_d2d32);
+	free(host_d2d64);
+	free(host_d2d128);
 	}
-	{
-		printf("\nTEST CASE ID: FT_VEDA_MEM_09\n");
-		memset(host_2d, 0x00, sizeof(int16_t) *w*h);
-		CHECK(vedaMemsetD2D16(ptr_2d, pitch_size, 0x1234, w, h));
-		CHECK(vedaMemcpyDtoH(host_2d,ptr_2d, sizeof(int16_t) *w*h));
-		auto h16 = (int16_t*)host_2d;
-		for(size_t W = 0; W < w; W++) {
-			for(size_t H = 0; H < h; H++) {
-				if(h16[W + H * pitch_size] != 0x1234) {
-					printf("TEST CASE ID: FT_VEDA_MEM_09 failed\n");
-					exit(0);
-				}
-			}
-		}
-	}
-	{
-		printf("\nTEST CASE ID: FT_VEDA_MEM_10\n");
-		memset(host_2d, 0x00, sizeof(int32_t) *w*h);
-		int32_t value = (int32_t)0x12345678u;
-		CHECK(vedaMemsetD2D16(ptr_2d, pitch_size, value, w, h));
-		CHECK(vedaMemcpyDtoH(host_2d,ptr_2d, sizeof(int32_t) *w*h));
-		auto h32 = (int32_t*)host_2d;
-		for(size_t W = 0; W < w; W++) {
-			for(size_t H = 0; H < h; H++) {
-				if(h32[W + H * pitch_size] != value) {
-					printf("TEST CASE ID: FT_VEDA_MEM_10 failed\n");
-					exit(0);
-				}
-			}
-		}
-	}
-	{
-		printf("\nTEST CASE ID: FT_VEDA_MEM_11\n");
-		memset(host_2d, 0x00, sizeof(int64_t) *w*h);
-		int64_t value = (int64_t)0x0123456789ABCDEFull;
-		CHECK(vedaMemsetD2D16(ptr_2d, pitch_size, value, w, h));
-		CHECK(vedaMemcpyDtoH(host_2d,ptr_2d, sizeof(int64_t) *w*h));
-		auto h64 = (int64_t*)host_2d;
-		for(size_t W = 0; W < w; W++) {
-			for(size_t H = 0; H < h; H++) {
-				if(h64[W + H * pitch_size] != value) {
-					printf("TEST CASE ID: FT_VEDA_MEM_11 failed\n");
-					exit(0);
-				}
-			}
-		}
-	}
-	free(host_2d);
-#endif
-
 	printf("\nTEST CASE ID: FT_VEDA_MEM_12\n");
 	CHECK(vedaMemsetD8(ptr, 0x00, size_1d/sizeof(int8_t)));
 	memset(host, 0x12, size_1d);
@@ -421,7 +456,7 @@ int main(int argc, char** argv) {
 	}
 	//Allocating the VEDA device memory with 0 size
 	VEDAmodule mod;
-        const char* modName = "libveda_test.vso";
+        const char* modName = "./libveda_test.vso";
         CHECK(vedaModuleLoad(&mod, modName));
 
        	VEDAfunction func;

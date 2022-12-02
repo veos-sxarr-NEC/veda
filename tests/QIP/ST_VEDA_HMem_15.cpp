@@ -61,7 +61,7 @@ void run(int dev){
         exit(0);
         }
         VEDAmodule mod;
-        const char* modName = "libomp_func_ve.vso";
+        const char* modName = "./libomp_func_ve.vso";
         CHECK(vedaModuleLoad(&mod, modName));
         printf("vedaModuleLoad(%p, \"%s\")\n", mod, modName);
         
