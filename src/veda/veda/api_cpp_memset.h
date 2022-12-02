@@ -11,14 +11,16 @@ template<typename T> VEDA_ENABLE(T, BITS) vedaMemsetD##BITS(VEDAdeviceptr dst, T
 }\
 template<typename T> VEDA_ENABLE(T, BITS) vedaMemsetD##BITS##Async(VEDAdeviceptr dst, T v, size_t N, VEDAstream stream) {\
 	return vedaMemsetD##BITS##Async(dst, *(uint##BITS##_t*)&v, N, stream);\
-}\
+}
+#if 0
+\
 template<typename T> VEDA_ENABLE(T, BITS) vedaMemsetD2D##BITS(VEDAdeviceptr dst, size_t dstPitch, T v, size_t Width, size_t Height) {\
 	return vedaMemsetD2D##BITS(dst, dstPitch, *(uint##BITS##_t*)&v, Width, Height);\
 }\
 template<typename T> VEDA_ENABLE(T, BITS) vedaMemsetD2D##BITS##Async(VEDAdeviceptr dst, size_t dstPitch, T v, size_t Width, size_t Height, VEDAstream stream) {\
 	return vedaMemsetD2D##BITS##Async(dst, dstPitch, *(uint##BITS##_t*)&v, Width, Height, stream);\
 }
-
+#endif
 VEDA_MEMSET(8)
 VEDA_MEMSET(16)
 VEDA_MEMSET(32)
@@ -31,11 +33,12 @@ template<typename T> VEDA_ENABLE(T, 64) vedaMemsetD128(VEDAdeviceptr dst, T x, T
 template<typename T> VEDA_ENABLE(T, 64) vedaMemsetD128Async(VEDAdeviceptr dst, T x, T y, size_t N, VEDAstream stream) {
 	return vedaMemsetD128Async(dst, *(uint64_t*)&x, *(uint64_t*)&y, N, stream);
 }
+#if 0
 template<typename T> VEDA_ENABLE(T, 64) vedaMemsetD2D128(VEDAdeviceptr dst, size_t dstPitch, T x, T y, size_t Width, size_t Height) {
 	return vedaMemsetD2D128(dst, dstPitch, *(uint64_t*)&x, *(uint64_t*)&y, Width, Height);
 }
 template<typename T> VEDA_ENABLE(T, 64) vedaMemsetD2D128Async(VEDAdeviceptr dst, size_t dstPitch, T x, T y, size_t Width, size_t Height, VEDAstream stream) {
 	return vedaMemsetD2D128Async(dst, dstPitch, *(uint64_t*)&x, *(uint64_t*)&y, Width, Height, stream);
 }
-
+#endif
 #undef VEDA_ENABLE

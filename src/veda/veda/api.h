@@ -174,6 +174,7 @@ VEDAresult	vedaHMemsetD16			(VEDAhmemptr dstDevice, uint16_t value, size_t N);
  * Sets the memory range of N 16-bit values to the specified value value.
  */
 VEDAresult	vedaHMemsetD16Async		(VEDAhmemptr dstDevice, uint16_t value, size_t N, VEDAstream hStream);
+#if 0
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
@@ -364,6 +365,7 @@ VEDAresult	vedaHMemsetD2D8			(VEDAhmemptr dstDevice, size_t dstPitch, uint8_t va
  * of bytes between each row.
  */
 VEDAresult	vedaHMemsetD2D8Async		(VEDAhmemptr dstDevice, size_t dstPitch, uint8_t value, size_t Width, size_t Height, VEDAstream hStream);
+#endif
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
@@ -548,6 +550,7 @@ VEDAresult	vedaMemsetD16			(VEDAdeviceptr dstDevice, uint16_t value, size_t N);
  * Sets the memory range of N 16-bit values to the specified value "value".
  */
 VEDAresult	vedaMemsetD16Async		(VEDAdeviceptr dstDevice, uint16_t value, size_t N, VEDAstream hStream);
+#if 0
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
@@ -738,6 +741,7 @@ VEDAresult	vedaMemsetD2D8			(VEDAdeviceptr dstDevice, size_t dstPitch, uint8_t v
  * of bytes between each row.
  */
 VEDAresult	vedaMemsetD2D8Async		(VEDAdeviceptr dstDevice, size_t dstPitch, uint8_t value, size_t Width, size_t Height, VEDAstream hStream);
+#endif
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
