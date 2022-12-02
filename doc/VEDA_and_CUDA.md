@@ -434,6 +434,16 @@ vedaHMemsetD128()      	|       NA      |                         |
 vedaHMemsetD128Async()	|       NA      |                         |   
 vedaHMemsetD16()        |       NA      |                         |
 vedaHMemsetD16Async()  	|       NA      |                         |
+vedaHMemsetD2D128()   	|       NA      |                         |
+vedaHMemsetD2D128Async()|       NA      |                         |
+vedaHMemsetD2D16()    	|       NA      |                         |
+vedaHMemsetD2D16Async()	|       NA      |                         |
+vedaHMemsetD2D32()     	|       NA      |                         |
+vedaHMemsetD2D32Async() |       NA      |                         |
+vedaHMemsetD2D64()      |       NA      |                         |
+vedaHMemsetD2D64Async() |       NA      |                         |
+vedaHMemsetD2D8()       |       NA      |                         |
+vedaHMemsetD2D8Async()  |       NA      |                         |
 vedaHMemsetD32()        |       NA      |                         |
 vedaHMemsetD32Async()  	|       NA      |                         |
 vedaHMemsetD64()        |       NA      |                         |
@@ -471,6 +481,12 @@ vedaMemPtrSize()	|	NA	|                         |
 vedaMemReport()		|	NA	|                         |
 vedaMemsetD16()		|	cuMemsetD16()	|                         |
 vedaMemsetD16Async()	|	cuMemsetD16Async()	|                         |
+vedaMemsetD2D16()	|	cuMemsetD2D16()	|                         |
+vedaMemsetD2D16Async()	|	cuMemsetD2D16Async()	|                         |
+vedaMemsetD2D32()	|	cuMemsetD2D32()	|                         |
+vedaMemsetD2D32Async()	|	cuMemsetD2D32Async()	|                         |
+vedaMemsetD2D8()	|	cuMemsetD2D8()	|                         |
+vedaMemsetD2D8Async()	|	cuMemsetD2D8Async()	|                         |
 vedaMemsetD32()		|	cuMemsetD32()	|                         |
 vedaMemsetD32Async()	|	cuMemsetD32Async()	|                         |
 vedaMemsetD64()		|	NA	|                         |
@@ -480,6 +496,10 @@ vedaMemsetD8Async()	|	cuMemsetD8Async()	|                         |
 vedaMemSize()		|	NA	|                         |
 vedaMemsetD128()	|	NA	|                         |
 vedaMemsetD128Async()	|	NA	|                         |
+vedaMemsetD2D128()	|	NA	|                         |
+vedaMemsetD2D128Async()	|	NA	|                         |
+vedaMemsetD2D64()	|	NA	|                         |
+vedaMemsetD2D64Async()	|	NA	|                         |
 vedaMemSwap()		|	NA	|                         |
 vedaMemSwapAsync()	|	NA	|                         |
 vedaModuleGetFunction()	|	cuModuleGetFunction()	|                         |
