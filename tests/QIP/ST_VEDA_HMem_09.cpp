@@ -54,7 +54,7 @@ void run(int dev){
 	VEDAcontext cont;
         CHECK(vedaCtxCreate(&cont, VEDA_CONTEXT_MODE_OMP, dev));
         CHECK(vedaCtxStreamCnt(&cnt));
-        VEDAptr<int64_t> ptr_free = 0;
+        VEDAptr<int> ptr_free = 0;
         CHECK(vedaMemAlloc(&ptr_free, SIZE));
         if(ptr_free.size() != SIZE)
         {
@@ -79,14 +79,16 @@ void run(int dev){
         printf("vedaCtxSynchronize\n");
         CHECK(vedaCtxSynchronize());
         int *reference = (int *)malloc(SIZE);
-        int *updated_data = (int *)malloc(SIZE);
+	void *updated_data;
+        updated_data = (int *)malloc(SIZE);
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); ++i) 
 		reference[i] = i;
         
-        CHECK(vedaMemcpyDtoH(updated_data, ptr_free, SIZE));
+        CHECK(vedaHMemcpyDtoX(updated_data, ptr_free, SIZE));
+	int *a = (int *)updated_data;
         bool success = true;
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); i++)
-        if (reference[i] != updated_data[i] ){
+        if (reference[i] != a[i] ){
           success = false;
         break;
         }

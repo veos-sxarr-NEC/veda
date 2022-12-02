@@ -274,7 +274,11 @@ int main(int argc, char** argv) {
 	VEDAdeviceptr ptr_base;
 	size_t base_size;
 	CHECK(vedaMemGetAddressRange(&ptr_base, &base_size, ptr_adv));
+#ifndef NOCPP17
 	printf("%p\t%p\t%p",ptr,ptr_adv,ptr_base);
+#else
+        printf("%p\t%p\t%p",&ptr,ptr_adv,ptr_base);
+#endif
 	if( (VEDAdeviceptr)ptr != ptr_base || ptr.size() != base_size)
 	{
 		printf("TEST CASE ID: FT_VEDA_MEM_27 failed\n");
@@ -436,7 +440,8 @@ int main(int argc, char** argv) {
 	CHECK(vedaCtxSynchronize());
 	CHECK(vedaMemFree(ptr22));
 
-#if 0 // DISABLED
+// DISABLED, vedaMemHMEMSize no longer exists because VEDA no longer tracks HMEM ptrs
+#if 0
 	printf("\nTEST CASE ID: FT_VEDA_MEM_23\n");
 	VEDAdeviceptr hmemPtr = NULL;
 	CHECK(vedaMemHMEM((void**)&hmemPtr, ptr));
@@ -461,7 +466,7 @@ int main(int argc, char** argv) {
 	printf("\nTEST CASE ID: FT_VEDA_MEM_26\n");
 	size_t free=0,total=0;
 	CHECK(vedaMemGetInfo(&free,&total));
-	if((total-free) != (64 + 64 + 128))
+	if((total-free) != (64 + 16 + 64))
 	{
 		printf("TEST CASE ID: FT_VEDA_MEM_26 %d failed\n", (total-free));
 		exit(0);	

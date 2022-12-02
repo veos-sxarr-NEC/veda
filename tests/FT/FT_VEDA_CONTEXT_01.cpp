@@ -221,9 +221,7 @@ int main(int argc, char** argv) {
 			printf("FT_VEDA_CONTEXT_12 failed\n");
 			exit(0);
 		}
-		CHECK(vedaCtxSetCurrent(NULL));
-		current=0;
-		if(vedaCtxGetCurrent(&current) != VEDA_ERROR_UNKNOWN_CONTEXT)
+		if(vedaCtxSetCurrent(NULL) != VEDA_ERROR_INVALID_CONTEXT)
 		{
 			printf("FT_VEDA_CONTEXT_12 failed\n");
 			exit(0);
@@ -311,11 +309,8 @@ int main(int argc, char** argv) {
                 CHECK(vedaLaunchKernelEx(func, stream, args, 0, result));
 #endif
 	}
-	if( -1 != vedaCtxSynchronize())
-	{
-		printf("FT_VEDA_CONTEXT_19 failed\n");
-		exit(0);
-	}
+	CHECK(vedaCtxSynchronize());
+
 	CHECK(vedaModuleUnload(mod));
 	if(devcnt>1){
 		printf("TEST CASE ID: FT_VEDA_CONTEXT_20\n");

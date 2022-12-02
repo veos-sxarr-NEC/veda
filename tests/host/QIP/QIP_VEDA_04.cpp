@@ -68,7 +68,7 @@ void run(VEDAcontext_mode omp, VEDAdevice device) {
 	CHECK(vedaCtxDestroy(ctx));
 	printf("vedaCtxDestroy\n");
 	ret=vedaCtxDestroy(ctx);
-        if(ret == VEDA_ERROR_CONTEXT_IS_DESTROYED)
+        if(ret == VEDA_ERROR_UNKNOWN_CONTEXT)
                 printf("QIP_VEDA_05 PASSED\n");
 	else{
                 printf("QIP_VEDA_05 FAILED\n");

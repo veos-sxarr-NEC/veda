@@ -25,12 +25,12 @@ void check(VEDAresult err, const char* file, const int line) {
 int main(int argc, char** argv) {
     int devcnt=0,dev=0;
     if(argc<=1) {
-        printf("Pass the program iteration count to run for longer time\ni.e. $./test_binary 25000 for 1 hour approx\n");
+        printf("Pass the program iteration count to run for longer time\ni.e. $./test_binary 15000 for 1 hour approx\n");
         exit(1);
     }
     int iteration_count = atoi(argv[1]);
     int count=0;
-
+   
     CHECK(vedaInit(0));
     CHECK(vedaDeviceGetCount(&devcnt));
     CHECK(vedaExit());
@@ -38,12 +38,11 @@ int main(int argc, char** argv) {
     printf("Starting long run with %d threads on %d devices\n",devcnt,devcnt);
     while(count++ < iteration_count){
         CHECK(vedaInit(0));
-	for(dev=0; dev<devcnt; dev++) {
-		std::thread t(run,dev);
-		t.join();
-
-	}
-	CHECK(vedaExit());
+        for(dev=0; dev<devcnt; dev++) {
+            std::thread t(run,dev);
+            t.join();
+        }
+        CHECK(vedaExit());
     }
     return 0;
 }
@@ -52,7 +51,7 @@ void run(int dev){
 	static size_t pass=0,fail=0;
 	int cnt=0;
 	VEDAcontext cont;
-        CHECK(vedaCtxCreate(&cont, VEDA_CONTEXT_MODE_OMP, dev));
+        CHECK(vedaCtxCreate(&cont, VEDA_CONTEXT_MODE_SCALAR, dev));
         CHECK(vedaCtxStreamCnt(&cnt));
         VEDAptr<int64_t> ptr_free = 0;
         CHECK(vedaMemAlloc(&ptr_free, SIZE));
@@ -67,7 +66,7 @@ void run(int dev){
         printf("vedaModuleLoad(%p, \"%s\")\n", mod, modName);
         
         VEDAfunction func;
-        const char* funcName = "ve_omp_func";
+        const char* funcName = "ve_non_omp_func";
         CHECK(vedaModuleGetFunction(&func, mod, funcName));
         printf("vedaModuleGetFunction(%p, %p, \"%s\")\n", func, mod, funcName);
         VEDAargs args;
@@ -79,14 +78,16 @@ void run(int dev){
         printf("vedaCtxSynchronize\n");
         CHECK(vedaCtxSynchronize());
         int *reference = (int *)malloc(SIZE);
-        int *updated_data = (int *)malloc(SIZE);
+	void *updated_data;
+	updated_data = (int *)malloc(SIZE);
+	int *a = (int *)updated_data;
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); ++i) 
 		reference[i] = i;
         
-        CHECK(vedaMemcpyDtoH(updated_data, ptr_free, SIZE));
+        CHECK(vedaHMemcpyDtoX(updated_data, ptr_free, SIZE));
         bool success = true;
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); i++)
-        if (reference[i] != updated_data[i] ){
+        if (reference[i] != a[i] ){
           success = false;
         break;
         }
@@ -97,7 +98,7 @@ void run(int dev){
         printf("Passed=%d Failed=%d\n",pass,fail);
         
         free(reference);
-        free(updated_data);
+	free(updated_data);
         printf("vedaMemFreeAsync\n");
         CHECK(vedaMemFree(ptr_free));
         printf("vedaCtxDestroy\n");

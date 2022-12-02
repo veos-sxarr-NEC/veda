@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 	CHECK(veraMemset(d_a, 0x00, cnt));
 	CHECK(veraMemcpy(d_a, host, size, veraMemcpyHostToDevice));
 
-	for(int i = 0; i <= cnt; i=i+100)
+	for(int i = 0; i < cnt; i=i+100)
 		CHECK(veraLaunchKernel(func, 0, VEDAptr<int>(VERA2VEDA(d_a)).ptr(), i));
 
         CHECK(veraStreamSynchronize(0));

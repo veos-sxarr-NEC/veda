@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     }
     int iteration_count = atoi(argv[1]);
     int count=0;
-
+   
     CHECK(vedaInit(0));
     CHECK(vedaDeviceGetCount(&devcnt));
     CHECK(vedaExit());
@@ -38,12 +38,12 @@ int main(int argc, char** argv) {
     printf("Starting long run with %d threads on %d devices\n",devcnt,devcnt);
     while(count++ < iteration_count){
         CHECK(vedaInit(0));
-	for(dev=0; dev<devcnt; dev++) {
-		std::thread t(run,dev);
-		t.join();
+        for(dev=0; dev<devcnt; dev++) {
+            std::thread t(run,dev);
+            t.join();
 
-	}
-	CHECK(vedaExit());
+        }
+        CHECK(vedaExit());
     }
     return 0;
 }
@@ -67,7 +67,7 @@ void run(int dev){
         printf("vedaModuleLoad(%p, \"%s\")\n", mod, modName);
         
         VEDAfunction func;
-        const char* funcName = "ve_omp_func";
+        const char* funcName = "ve_non_omp_func";
         CHECK(vedaModuleGetFunction(&func, mod, funcName));
         printf("vedaModuleGetFunction(%p, %p, \"%s\")\n", func, mod, funcName);
         VEDAargs args;
@@ -79,14 +79,16 @@ void run(int dev){
         printf("vedaCtxSynchronize\n");
         CHECK(vedaCtxSynchronize());
         int *reference = (int *)malloc(SIZE);
-        int *updated_data = (int *)malloc(SIZE);
+	void *updated_data;
+	updated_data = (int *)malloc(SIZE);
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); ++i) 
 		reference[i] = i;
         
-        CHECK(vedaMemcpyDtoH(updated_data, ptr_free, SIZE));
+        CHECK(vedaHMemcpyDtoX(updated_data, ptr_free, SIZE));
+	int *a = (int *)updated_data;
         bool success = true;
         for (unsigned int i = 0; i < SIZE/sizeof(int64_t); i++)
-        if (reference[i] != updated_data[i] ){
+        if (reference[i] != a[i] ){
           success = false;
         break;
         }
@@ -97,7 +99,7 @@ void run(int dev){
         printf("Passed=%d Failed=%d\n",pass,fail);
         
         free(reference);
-        free(updated_data);
+	free(updated_data);
         printf("vedaMemFreeAsync\n");
         CHECK(vedaMemFree(ptr_free));
         printf("vedaCtxDestroy\n");
