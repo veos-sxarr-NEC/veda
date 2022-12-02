@@ -3,6 +3,7 @@
 #include <thread>
 #include <tungl/c.h>
 #include <tungl/api.h>
+#include <veo_hmem.h>
 
 #define LOCK() std::lock_guard<std::mutex> __lock__(veda_mutex)
 
@@ -149,6 +150,12 @@ __global__ VEDAresult vedaMemSwap(VEDAdeviceptr A, VEDAdeviceptr B) {
 	}
 
 	return VEDA_SUCCESS;
+}
+
+//------------------------------------------------------------------------------
+__global__ VEDAresult vedaHMemPtr(void** ptr, VEDAhmemptr hptr) {
+        *ptr = veo_get_hmem_addr(hptr);
+        return VEDA_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
