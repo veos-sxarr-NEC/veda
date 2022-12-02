@@ -4,10 +4,9 @@
 
 #define VGEN_1D		VEDA_JOIN(VGEN_F, D128)
 #define VGEN_1D_ASYNC	VEDA_JOIN(VGEN_1D, Async)
-#if 0
 #define VGEN_2D		VEDA_JOIN(VGEN_F, D2D128)
 #define VGEN_2D_ASYNC	VEDA_JOIN(VGEN_2D, Async)
-#endif
+
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
@@ -51,7 +50,7 @@ VEDAresult VGEN_1D_ASYNC(VGEN_P dstDevice, uint64_t x, uint64_t y, size_t N, VED
 		ctx.memset(dstDevice, x, y, N, stream);
 	)
 }
-#if 0
+
 //------------------------------------------------------------------------------
 /**
  * @brief Initializes device memory.
@@ -99,12 +98,10 @@ VEDAresult VGEN_2D_ASYNC(VGEN_P dstDevice, size_t dstPitch, uint64_t x, uint64_t
 		ctx.memset2D(dstDevice, dstPitch, x, y, Width, Height, stream);
 	)
 }
-#endif
+
 //------------------------------------------------------------------------------
 
 #undef VGEN_1D
 #undef VGEN_1D_ASYNC
-#if 0
 #undef VGEN_2D
 #undef VGEN_2D_ASYNC
-#endif
