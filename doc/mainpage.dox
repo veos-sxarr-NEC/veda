@@ -33,7 +33,7 @@
  *
  * @par
  *      Rev.5,
- *      Dec 2022,
+ *      Jan 2023,
  * @n   This revision covers veoffload-veda-2.14.0 or later.
  * @n   Added support of below new VEDA APIs
  * @n   vedaHMemsetD2D128Async(),vedaHMemsetD2D128(),vedaHMemsetD2D16Async(),
