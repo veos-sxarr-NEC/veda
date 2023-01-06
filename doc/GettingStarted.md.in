@@ -43,6 +43,8 @@ To install the packages to develop programs by yum, execute the following comman
 # yum install @PACKAGE@-devel
 ~~~
 
+libveda.vso is installed and it is linked with the libnc++.so. Shared objects to be loaded with VEDA must be linked with libnc++.so. Please confirm /opt/nec/ve/ncc/<version>/lib/libnc++.so is installed when you build shared objects using nc++. <version> is the version of nc++ you are using to build your shared objects.
+
 @section hello Hello World
 First, let's try a "Hello, World!" program on VE.
 
@@ -66,7 +68,7 @@ Save the above code as [libvehello.vc](examples_2VE_2libvehello_8vc-example.html
 A function on VE called via VEDA needs to return a 64-bit unsigned integer.
 A function on VE called via VEDA can have arguments as mentioned later.
 
-### Compile VE code
+### Compile VE code5
 VEDA supports a function in a shared library.
 
 To execute a function on VE using VEDA, compile and link a source file
