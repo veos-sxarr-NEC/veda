@@ -33,8 +33,8 @@ void setInitialized(const bool value) {
                         s_envOmpThread = s_ompThreads;
 #if BUILD_VEOS_RELEASE
 		if(!std::getenv("VEORUN_BIN")) {
-		  if(std::getenv("VEDA_FTRACE"))	setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun", 1);
-		  else				setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun-ftrace", 1);
+		  if(std::getenv("VEDA_FTRACE"))	setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun-ftrace", 1);
+		  else		  			setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun", 1);
 		}
 		s_stdLib = "/opt/nec/ve/veos/lib64/libveda.vso";
 #else
