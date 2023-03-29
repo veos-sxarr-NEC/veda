@@ -29,9 +29,13 @@ https://sxauroratsubasa.sakura.ne.jp/documents/veos/en/aveo/md_GettingStarted.ht
 To run programs, please install veoffload-veda and the runtime packages of the compiler (2.2.2 or later).
 
 To install the packages to run programs by yum, execute the following command as root:
-
+On ve1
 ~~~
-# yum install @PACKAGE@
+# yum install @PACKAGE@-ve1
+~~~
+On ve3
+~~~
+# yum install @PACKAGE@-ve3
 ~~~
 
 ### Installing development package
@@ -43,7 +47,7 @@ To install the packages to develop programs by yum, execute the following comman
 # yum install @PACKAGE@-devel
 ~~~
 
-libveda.vso is installed and it is linked with the libnc++.so. Shared objects to be loaded with VEDA must be linked with libnc++.so. Please confirm /opt/nec/ve/ncc/<version>/lib/libnc++.so is installed when you build shared objects using nc++. <version> is the version of nc++ you are using to build your shared objects.
+libveda.vso is installed and it is linked with the libnc++.so(VE1)/libc++.so(VE3). Shared objects to be loaded with VEDA must be linked with libnc++.so(VE1)/libc++.so(VE3). Please confirm /opt/nec/ve/ncc/<version>/lib/libnc++.so(VE1) / /opt/nec/ve/ncc/<version>/lib/libc++.so(VE3) is installed when you build shared objects using nc++. <version> is the version of nc++ you are using to build your shared objects. Please specify -stdlib=compat for VE1 to link libnc++.so. Please specify -stdlib=libc++ for VE3 to link libc++.
 
 @section hello Hello World
 First, let's try a "Hello, World!" program on VE.

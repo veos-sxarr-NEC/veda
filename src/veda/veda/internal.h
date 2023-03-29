@@ -52,6 +52,7 @@ namespace veda {
 #include "Device.h"
 #include "devices/devices.h"
 #include "Stream.h"
+#include "libved.h"
 
 //------------------------------------------------------------------------------
 namespace veda {
@@ -63,7 +64,7 @@ namespace veda {
 	void		setInitialized	(const bool value);
 inline	void		checkContext	(VEDAcontext ctx)	{	if(dynamic_cast<VEDAcontext>(ctx) == 0)	VEDA_THROW(VEDA_ERROR_INVALID_CONTEXT);	}
 inline	void		checkModule	(VEDAmodule mod) 	{	if(dynamic_cast<VEDAmodule> (mod) == 0) VEDA_THROW(VEDA_ERROR_INVALID_MODULE);	}
-
+        const char*     ve_arch_find    (void);
 //------------------------------------------------------------------------------
 }
 

@@ -7,10 +7,10 @@ namespace veda {
 Context&	Device::ctx		(void) 						{	return m_ctx;								}
 VEDAdevice	Device::vedaId		(void) const					{	return m_vedaId;							}
 bool		Device::isNUMA		(void) const					{	return m_isNUMA;							}
-float		Device::powerCurrent	(void) const					{	return readSensor<float>("sensor_12")/1000.0f / (isNUMA() ? 2 : 1);	}
-float		Device::powerCurrentEdge(void) const					{	return readSensor<float>("sensor_13")/1000.0f / (isNUMA() ? 2 : 1);	}
-float		Device::powerVoltage	(void) const					{	return readSensor<float>("sensor_8")/1000000.0f;			}
-float		Device::powerVoltageEdge(void) const					{	return readSensor<float>("sensor_9")/1000000.0f;			}
+float           Device::powerCurrent    (void) const                                    {       return m_sensorPtr->readPowerCurrent(this);             }
+float           Device::powerCurrentEdge(void) const                                    {       return m_sensorPtr->readPowerCurrentEdge(this); }
+float           Device::powerVoltage    (void) const                                    {       return m_sensorPtr->readPowerVoltage(this);             }
+float           Device::powerVoltageEdge(void) const                                    {       return m_sensorPtr->readPowerVoltageEdge(this); }
 int		Device::aveoId		(void) const					{	return m_aveoId;							}
 int		Device::cacheL1d	(void) const					{	return m_cacheL1d;							}
 int		Device::cacheL1i	(void) const					{	return m_cacheL1i;							}
@@ -64,6 +64,13 @@ Device::Device(const VEDAdevice vedaId, const int aveoId, const int sensorId, co
 	for(int i = 0; i < (sizeof(int)*8); i++, bit <<= 1)
 		if(active & bit)
 			m_cores.emplace_back(i);
+        const char* arch_name = ve_arch_find();
+        if(!strncmp(arch_name, "ve1", 3))
+                m_sensorPtr = std::move(std::make_shared<SensorVE1>());
+        else if(!strncmp(arch_name, "ve3", 3))
+                m_sensorPtr = std::move(std::make_shared<SensorVE3>());
+        else
+                throw VEDA_ERROR_UNKNOWN_ARCHITECTURE;	
 }
 
 //------------------------------------------------------------------------------
@@ -89,5 +96,21 @@ void Device::report(void) const {
 	printf(")]\n");		
 }
 
+//------------------------------------------------------------------------------
+float SensorVE1::readPowerCurrent       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_12")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
+//------------------------------------------------------------------------------
+float SensorVE1::readPowerCurrentEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_13")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
+//------------------------------------------------------------------------------
+float SensorVE1::readPowerVoltage       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_8")/1000000.0f;        }
+//------------------------------------------------------------------------------
+float SensorVE1::readPowerVoltageEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_9")/1000000.0f;        }
+//------------------------------------------------------------------------------
+float SensorVE3::readPowerCurrent       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_41")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
+//------------------------------------------------------------------------------
+float SensorVE3::readPowerCurrentEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_36")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
+//------------------------------------------------------------------------------
+float SensorVE3::readPowerVoltage       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_42")/1000000.0f;       }
+//------------------------------------------------------------------------------
+float SensorVE3::readPowerVoltageEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_37")/1000000.0f;       }
 //------------------------------------------------------------------------------
 }

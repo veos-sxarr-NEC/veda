@@ -86,7 +86,15 @@ ve_get_node_llc_cache(){
 }
 
 ve_get_node_current(){
-	file_name="/sys/class/ve/ve$2/sensor_12"
+        if [ -e /etc/opt/nec/ve/default.conf ]; then
+                source /etc/opt/nec/ve/default.conf
+        fi
+        if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
+                file_name="/sys/class/ve/ve$2/sensor_41"
+        else
+                file_name="/sys/class/ve/ve$2/sensor_12"
+        fi
+
 	while read line
 	do
 		line1=$line
@@ -102,7 +110,15 @@ ve_get_node_current(){
 	return $line1
 }
 ve_get_node_current_edge(){
-	file_name="/sys/class/ve/ve$2/sensor_13"
+        if [ -e /etc/opt/nec/ve/default.conf ]; then
+                source /etc/opt/nec/ve/default.conf
+        fi
+        if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
+                file_name="/sys/class/ve/ve$2/sensor_36"
+        else
+                file_name="/sys/class/ve/ve$2/sensor_13"
+        fi
+	
 	while read line
 	do
 		line1=$line
@@ -118,7 +134,15 @@ ve_get_node_current_edge(){
 	return $line1
 }
 ve_get_node_voltage(){
-	file_name="/sys/class/ve/ve$1/sensor_8"
+        if [ -e /etc/opt/nec/ve/default.conf ]; then
+                source /etc/opt/nec/ve/default.conf
+        fi
+        if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
+                file_name="/sys/class/ve/ve$1/sensor_42"
+        else
+                file_name="/sys/class/ve/ve$1/sensor_8"
+        fi
+
 	while read line
 	do
 		line1=$line
@@ -128,7 +152,15 @@ ve_get_node_voltage(){
 	return $line1
 }
 ve_get_node_voltage_edge(){
-	file_name="/sys/class/ve/ve$1/sensor_9"
+        if [ -e /etc/opt/nec/ve/default.conf ]; then
+                source /etc/opt/nec/ve/default.conf
+        fi
+        if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
+                file_name="/sys/class/ve/ve$1/sensor_37"
+        else
+                file_name="/sys/class/ve/ve$1/sensor_9"
+        fi
+	
 	while read line
 	do
 		line2=$line
@@ -162,8 +194,8 @@ ve_get_node_memory_clock(){
 	return $line
 }
 ve_get_node_core(){
-	start_core=`(/opt/nec/ve/bin/lscpu | grep -A24 "VE Node: $1" | grep "NUMA node$2 CPU(s)" | tr -s ' w' | cut -d':' -f2 | cut -d'-' -f1)` >& /dev/null
-	end_core=`(/opt/nec/ve/bin/lscpu | grep -A24 "VE Node: $1" | grep "NUMA node$2 CPU(s)" | tr -s ' w' | cut -d':' -f2 | cut -d'-' -f2)` >& /dev/null
+	start_core=`(/opt/nec/ve/bin/ve-lscpu | grep -A24 "VE Node: $1" | grep "NUMA node$2 CPU(s)" | tr -s ' w' | cut -d':' -f2 | cut -d'-' -f1)` >& /dev/null
+	end_core=`(/opt/nec/ve/bin/ve-lscpu | grep -A24 "VE Node: $1" | grep "NUMA node$2 CPU(s)" | tr -s ' w' | cut -d':' -f2 | cut -d'-' -f2)` >& /dev/null
 	core=$((${end_core} - ${start_core} + 1))
 	echo $core
 }

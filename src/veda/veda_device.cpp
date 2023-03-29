@@ -387,7 +387,7 @@ VEDAresult vedaDeviceGetName(char* name, int len, VEDAdevice dev) {
 
 	        int retval = get_ve_product_name(v, t, model, sizeof(model));
         	if(retval != 0)
-			VEDA_THROW(VEDA_ERROR_INVALID_DEVICE);
+		     strcpy(model," Unknown Model");
 	#else
 		auto version		= device.model();
 		auto cores		= device.cores();

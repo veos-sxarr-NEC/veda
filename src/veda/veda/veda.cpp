@@ -1,5 +1,5 @@
 #include <veda/internal.h>
-
+#include <fcntl.h>
 namespace veda {
 //------------------------------------------------------------------------------
 static bool		s_initialized	= false;
@@ -32,11 +32,21 @@ void setInitialized(const bool value) {
 			s_ompThreads = std::atoi(env);
                         s_envOmpThread = s_ompThreads;
 #if BUILD_VEOS_RELEASE
-		if(!std::getenv("VEORUN_BIN")) {
-		  if(std::getenv("VEDA_FTRACE"))	setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun-ftrace", 1);
-		  else		  			setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun", 1);
-		}
-		s_stdLib = "/opt/nec/ve/veos/lib64/libveda.vso";
+                const char* arch = veda::ve_arch_find();
+                if(!strncmp(arch, "ve3", 3)) {
+                   if(!std::getenv("VEORUN_BIN")) {
+                     if(std::getenv("VEDA_FTRACE"))        setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun-ftrace_ve3", 1);
+                     else                                  setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun_ve3", 1);
+                   }
+                   s_stdLib = "/opt/nec/ve3/lib/libveda.vso";
+                }
+                else {
+                   if(!std::getenv("VEORUN_BIN")) {
+                     if(std::getenv("VEDA_FTRACE"))        setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun-ftrace_ve1", 1);
+                     else                                  setenv("VEORUN_BIN", "/opt/nec/ve/veos/libexec/aveorun_ve1", 1);
+                   }
+                   s_stdLib = "/opt/nec/ve/lib/libveda.vso";
+                }
 #else
 		// Init StdLib Path --------------------------------------------
 		// Stolen from: https://stackoverflow.com/questions/33151264/get-dynamic-library-directory-in-c-linux
@@ -53,6 +63,12 @@ void setInitialized(const bool value) {
 			veorun.append("/libexec/aveorun");
 			if(std::getenv("VEDA_FTRACE"))
 				veorun.append("-ftrace");
+                         veorun.append("_");
+                         const char* arch = veda::ve_arch_find();
+                         if(!strncmp(arch, "ve", 2))
+                                veorun.append(arch);
+                         else
+                                throw VEDA_ERROR_UNKNOWN_ARCHITECTURE;
 			setenv("VEORUN_BIN", veorun.c_str(), 1);
 		}
 
@@ -89,5 +105,42 @@ VEDAresult VEOtoVEDA(const int err) {
 	return VEDA_ERROR_VEO_COMMAND_UNKNOWN_ERROR;
 }
 
-//------------------------------------------------------------------------------
+
+const char* ve_arch_find()
+{
+        struct dirent* dp;
+        DIR* fd;
+        const char *arch_name=NULL;
+        vedl_handle *vedl_hndl = NULL;
+        if((fd = opendir("/dev/")) == NULL)
+                throw VEDA_ERROR_NO_DEVICES_FOUND;
+
+        while((dp = readdir(fd)) != NULL) {
+                if(!strncmp(dp->d_name, "veslot", 6)) {
+                        char device[] = "/dev/veslotX";
+                        strncpy(device+5,dp->d_name,7);
+
+			int fd1 = open(device, O_RDONLY, 0);
+			if(fd1 < 0)
+				continue;
+
+			close(fd1);
+                        vedl_hndl = vedl_open_ve(device, -1);
+                        if (vedl_hndl == NULL)
+                                continue;
+
+                        arch_name = vedl_get_arch_class_name(vedl_hndl);
+                        break;
+                }
+        }
+        closedir(fd);
+	if(vedl_hndl)
+                vedl_close_ve(vedl_hndl);
+
+	if(arch_name == NULL)
+                throw VEDA_ERROR_NO_DEVICES_FOUND;
+
+        return arch_name;
+}
+
 }

@@ -32,6 +32,11 @@
  *      Updates/Remarks
  *
  * @par
+ *      Rev.6,
+ *      Mar 2023,
+ * @n   This revision covers veoffload-veda-3.0.1 or later.
+ * @n   Update package name and lib.
+ * @par
  *      Rev.5,
  *      Jan 2023,
  * @n   This revision covers veoffload-veda-2.14.0 or later.

@@ -1,6 +1,7 @@
 #pragma once
 
 namespace veda {
+	class Sensor;
 	class Device final {
 		typedef std::vector<int>	Cores;
 
@@ -22,6 +23,7 @@ namespace veda {
 		const	int			m_versionFirmware;
 		const	int			m_model;
 		const	int			m_type;
+		std::shared_ptr<Sensor>         m_sensorPtr;
 			Context			m_ctx;
 
 		uint64_t	readSensor	(const char* file, const bool isHex) const;
@@ -59,5 +61,29 @@ namespace veda {
 		int		versionFirmware	(void) const;
 		size_t		memorySize	(void) const;
 		void		report		(void) const;
+		friend  class SensorVE1;
+                friend  class SensorVE3;
 	};
+        class Sensor{
+        public:
+                virtual float readPowerCurrent(const Device*) const=0;
+                virtual float readPowerCurrentEdge(const Device*) const=0;
+                virtual float readPowerVoltage(const Device*) const=0;
+                virtual float readPowerVoltageEdge(const Device*) const=0;
+        };
+
+        class SensorVE1:public Sensor{
+        public:
+                float readPowerCurrent(const Device*) const ;
+                float readPowerCurrentEdge(const Device*) const;
+                float readPowerVoltage(const Device*) const;
+                float readPowerVoltageEdge(const Device*) const;
+        };
+        class SensorVE3:public Sensor{
+        public:
+                float readPowerCurrent(const Device*) const;
+                float readPowerCurrentEdge(const Device*) const;
+                float readPowerVoltage(const Device*) const;
+                float readPowerVoltageEdge(const Device*) const;
+        };
 }
