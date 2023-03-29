@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef __cplusplus
 //------------------------------------------------------------------------------
 template<typename T>
 inline size_t VEDAptr<T>::size(void) const {
@@ -34,3 +34,4 @@ inline T* HMEMptr<T>::ptr(void) const {
 }
 
 //------------------------------------------------------------------------------
+#endif  // __cplusplus

@@ -1,0 +1,10 @@
+#include <veda_device.h>
+#include <omp.h>
+
+void testST_VEDA_C_02(void* p, size_t cnt){
+        int *ptr = (int*)p;
+        cnt = cnt/sizeof(int);
+        for(int i = 0; i < cnt; i++)
+                ptr[i]= i ;
+}
+
