@@ -32,6 +32,15 @@
  *      Updates/Remarks
  *
  * @par
+ *      Rev.7,
+ *      Feb 2024,
+ * @n   This revision covers veoffload-veda-3.2.0 or later.
+ * @n   The meaning of the second argument in vedaDeviceGetTemp() has
+ *      been changed from "core index" to "location index" to support
+ *      multiple generations of vector engines.
+ *      Updated the return values of vedaDeviceGetTemp() to add
+ *      VEDA_ERROR_INVALID_VALUE.
+ * @par
  *      Rev.6,
  *      Mar 2023,
  * @n   This revision covers veoffload-veda-3.0.1 or later.

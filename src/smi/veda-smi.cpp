@@ -62,11 +62,13 @@ int main(int argc, char** argv) {
 		printf("  ├ Firmware: %i\n", firmware);
 		printf("  ├ Memory:   %llu MiB\n", total/1024/1024);
 		printf("  ├ Cache:    LLC: %ikB, L2: %ikB, L1d: %ikB, L1i: %ikB\n", llc, l2, l1d, l1i);
+
 		printf("  ├ Temp:     ");
-		
-		for(int i = 0; i < cores; i++) {
+		for(int i = 0;; i++) {
 			float temp = 0;
-			CHECK(vedaDeviceGetTemp(&temp, i, dev));
+			VEDAresult err = vedaDeviceGetTemp(&temp, i, dev);
+			if (err != VEDA_SUCCESS)
+				break;
 			printf("%2.1f°C ", temp);
 		}
 		printf("\n");

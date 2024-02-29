@@ -39,7 +39,7 @@ namespace veda {
 		Context&	ctx		(void);
 		VEDAdevice	vedaId		(void) const;
 		bool		isNUMA		(void) const;
-		float		coreTemp	(const int core) const;
+		float		temp		(const int) const;
 		float		powerCurrent	(void) const;
 		float		powerCurrentEdge(void) const;
 		float		powerVoltage	(void) const;
@@ -70,6 +70,7 @@ namespace veda {
                 virtual float readPowerCurrentEdge(const Device*) const=0;
                 virtual float readPowerVoltage(const Device*) const=0;
                 virtual float readPowerVoltageEdge(const Device*) const=0;
+                virtual float temp(const Device*, const int, const int) const=0;
         };
 
         class SensorVE1:public Sensor{
@@ -78,6 +79,7 @@ namespace veda {
                 float readPowerCurrentEdge(const Device*) const;
                 float readPowerVoltage(const Device*) const;
                 float readPowerVoltageEdge(const Device*) const;
+                float temp(const Device*, const int, const int) const;
         };
         class SensorVE3:public Sensor{
         public:
@@ -85,5 +87,6 @@ namespace veda {
                 float readPowerCurrentEdge(const Device*) const;
                 float readPowerVoltage(const Device*) const;
                 float readPowerVoltageEdge(const Device*) const;
+                float temp(const Device*, const int, const int) const;
         };
 }

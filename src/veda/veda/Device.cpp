@@ -74,14 +74,11 @@ Device::Device(const VEDAdevice vedaId, const int aveoId, const int sensorId, co
 }
 
 //------------------------------------------------------------------------------
-float Device::coreTemp(const int coreIdx) const {
-	if(coreIdx < 0 || coreIdx >= cores())
-		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
-	
-	auto sensor  = m_cores[coreIdx] + 14; // offseted by 14
-	char buffer[SENSOR_BUFFER_SIZE];
-	snprintf(buffer, sizeof(buffer), "sensor_%i", sensor);
-	return readSensor<float>(buffer)/1000000.0f;	
+float Device::temp(const int idx) const {
+	int physId = -1;
+	if(idx >= 0 && idx < cores())
+		physId = m_cores[idx];
+	return m_sensorPtr->temp(this, idx, physId);
 }
 
 //------------------------------------------------------------------------------
@@ -105,12 +102,31 @@ float SensorVE1::readPowerVoltage       (const Device *devPtr) const    {       
 //------------------------------------------------------------------------------
 float SensorVE1::readPowerVoltageEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_9")/1000000.0f;        }
 //------------------------------------------------------------------------------
+float SensorVE1::temp(const Device *devPtr, const int idx, const int physId) const {
+	if (physId < 0)
+		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
+	auto sensor  = physId + 14; // offseted by 14
+	char buffer[SENSOR_BUFFER_SIZE];
+	snprintf(buffer, sizeof(buffer), "sensor_%i", sensor);
+	return devPtr->readSensor<float>(buffer)/1000000.0f;
+}
+//------------------------------------------------------------------------------
 float SensorVE3::readPowerCurrent       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_41")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
 //------------------------------------------------------------------------------
-float SensorVE3::readPowerCurrentEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_36")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
+float SensorVE3::readPowerCurrentEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_42")/1000.0f / (devPtr->isNUMA() ? 2 : 1);     }
 //------------------------------------------------------------------------------
-float SensorVE3::readPowerVoltage       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_42")/1000000.0f;       }
+float SensorVE3::readPowerVoltage       (const Device *devPtr) const    {       return devPtr->readSensor<float>("sensor_36")/1000000.0f;       }
 //------------------------------------------------------------------------------
 float SensorVE3::readPowerVoltageEdge(const Device *devPtr) const       {       return devPtr->readSensor<float>("sensor_37")/1000000.0f;       }
 //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+float SensorVE3::temp(const Device *devPtr, const int idx, const int physId) const {
+        if (idx < 0 || idx > 12)
+		VEDA_THROW(VEDA_ERROR_INVALID_VALUE);
+	auto sensor  = idx + 1; // offseted by 1
+	char buffer[SENSOR_BUFFER_SIZE];
+	snprintf(buffer, sizeof(buffer), "sensor_%i", sensor);
+	return devPtr->readSensor<float>(buffer)/1000000.0f;
+}
+
 }

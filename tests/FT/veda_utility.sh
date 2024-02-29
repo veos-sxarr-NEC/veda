@@ -114,7 +114,7 @@ ve_get_node_current_edge(){
                 source /etc/opt/nec/ve/default.conf
         fi
         if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
-                file_name="/sys/class/ve/ve$2/sensor_36"
+                file_name="/sys/class/ve/ve$2/sensor_42"
         else
                 file_name="/sys/class/ve/ve$2/sensor_13"
         fi
@@ -138,7 +138,7 @@ ve_get_node_voltage(){
                 source /etc/opt/nec/ve/default.conf
         fi
         if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
-                file_name="/sys/class/ve/ve$1/sensor_42"
+                file_name="/sys/class/ve/ve$1/sensor_36"
         else
                 file_name="/sys/class/ve/ve$1/sensor_8"
         fi
@@ -247,5 +247,17 @@ ve_get_node_core_temp(){
 		echo $line
 	done < $file_name
 	return $line
+}
+ve_get_arch(){
+	if [ -e /etc/opt/nec/ve/default.conf ]; then
+		source /etc/opt/nec/ve/default.conf
+	fi
+	if [[ ($ARCH == "ve3" )|| ($ARCH == "VE3") ]]; then
+		arch=3
+	else
+		arch=1
+	fi
+	echo $arch
+	return $arch
 }
 "$@"

@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
 	CHECK(vedaDeviceGetCount(&devcnt));
 	printf("\nTEST CASE ID: FT_VEDA_DEVICE_06\n");
 	int physical_id = 0;
+	int ve_get_arch = Get_VEDA_device_arch();
 	for(int dev = 0; dev < devcnt; dev++) {
 		CHECK(vedaDeviceGetPhysicalId(&physical_id, dev));
 		printf("Physical ID for VEDA device %d is %d\n", dev, physical_id);
@@ -99,8 +100,9 @@ int main(int argc, char** argv) {
 			printf("FT_VEDA_DEVICE_17 FAILED\n");
 			exit(0);
 		}
-		if(veda_device_power != ((Get_VE_Node_Current(a_id, physical_id) * Get_VE_Node_Voltage(physical_id)))
-				+ (Get_VE_Node_Current_Edge(a_id, physical_id) * Get_VE_Node_Voltage_Edge(physical_id)) + 5.0)
+		float get_device_power = ((Get_VE_Node_Current(a_id, physical_id) * Get_VE_Node_Voltage(physical_id)))
+                                + (Get_VE_Node_Current_Edge(a_id, physical_id) * Get_VE_Node_Voltage_Edge(physical_id)) + 5.0;
+		if(veda_device_power != get_device_power)
 		{
 			printf("FT_VEDA_DEVICE_15 FAILED\n");
 			exit(0);
@@ -230,16 +232,41 @@ int main(int argc, char** argv) {
 			printf("FT_VEDA_DEVICE_028 FAILED\n");
 			exit(0);
 		}
-		for(int each_core = 0; each_core < core; each_core++) {
-			CHECK(vedaDeviceGetTemp(&each_core_temp, each_core, dev));
-			float core_temp = Get_VEDA_device_core_temp(aveo_id, numa_id, each_core,physical_id);
-			temp_diff=abs(core_temp-each_core_temp);
-			if(temp_diff>2)
-			{
-				printf("FT_VEDA_DEVICE_020 FAILED\n");
-				exit(0);
+		if(ve_get_arch == 1) {
+			for(int each_core = -1; each_core < core; each_core++) {
+				VEDAresult res = vedaDeviceGetTemp(&each_core_temp, each_core, dev);
+				printf("VE1: vedaDeviceGetTemp(%f, %i, %i)\n", each_core_temp, each_core, dev);
+				if(each_core == -1 || each_core == 9) {
+					if(res != VEDA_ERROR_INVALID_VALUE ) {
+						printf("FT_VEDA_DEVICE_020 FAILED\n");
+						exit(0);
+					}
+					continue;
+				}
+				float core_temp = Get_VEDA_device_core_temp(aveo_id, numa_id, each_core,physical_id);
+				temp_diff=abs(core_temp-each_core_temp);
+				if(temp_diff>2)
+				{
+					printf("FT_VEDA_DEVICE_020 FAILED\n");
+					exit(0);
+				}
 			}
 		}
+		else
+		{
+			int locations = 14;
+			for(int i = -1; i < locations; i++) {
+				float temp;
+				VEDAresult res = vedaDeviceGetTemp(&temp, i, dev);
+				printf("VE3: vedaDeviceGetTemp(%f, %i, %i)\n", temp, i, dev);
+				if(i == -1 || i == 13) {
+					if(res != VEDA_ERROR_INVALID_VALUE) {
+						printf("FT_VEDA_DEVICE_020 FAILED\n");
+						exit(0);
+					}
+				}
+			}
+                }
 	}
 	VEDAcontext cont, cont_after_reset;
 	int  active;
@@ -281,6 +308,30 @@ int main(int argc, char** argv) {
 	{
 		printf("FT_VEDA_DEVICE_038 FAILED\n");
 		exit(0);
+	}
+	printf("TEST CASE ID: FT_VEDA_DEVICE_041\n");
+	if(VEDA_ERROR_INVALID_VALUE != vedaDeviceGetTemp(&each_core_temp, -1, 0))
+	{
+		printf("FT_VEDA_DEVICE_041 FAILED\n");
+		exit(0);
+	}
+	if(ve_get_arch == 1)
+	{
+		printf("TEST CASE ID: VE1: FT_VEDA_DEVICE_042\n");
+		if(VEDA_ERROR_INVALID_VALUE != vedaDeviceGetTemp(&each_core_temp, 9, 0))
+		{
+			printf("VE1: FT_VEDA_DEVICE_042 FAILED\n");
+			exit(0);
+		}
+	}
+	else
+	{
+		printf("TEST CASE ID: VE3: FT_VEDA_DEVICE_042\n");
+		if(VEDA_ERROR_INVALID_VALUE != vedaDeviceGetTemp(&each_core_temp, 13, 0))
+		{
+			printf("VE3: FT_VEDA_DEVICE_042 FAILED\n");
+			exit(0);
+		}
 	}
 	printf("TEST CASE ID: FT_VEDA_DEVICE_039\n");
 	CHECK(vedaDevicePrimaryCtxRelease(0));

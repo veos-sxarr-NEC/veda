@@ -182,3 +182,13 @@ int Get_VEDA_device_fw_version(int aveo_id)
         fclose(fp);
         return model;
 }
+int Get_VEDA_device_arch()
+{
+	int arch=0;
+	char cmd[256];
+	sprintf(cmd, "./veda_utility.sh ve_get_arch");
+	FILE *fp = popen(cmd, "r");
+	fscanf(fp,"%d" , &arch);
+	fclose(fp);
+	return arch;
+}

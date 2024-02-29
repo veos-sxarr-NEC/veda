@@ -58,18 +58,20 @@ VEDAresult vedaCtxGet(VEDAcontext* ctx, const VEDAdevice device) {
 
 //------------------------------------------------------------------------------
 /**
- * @brief Retrieve the core temperature of the VEDA device in Celsius.
- * @param tempC pointer to hold the core temperature.
- * @param coreIdx Core index of the VEDA device.
+ * @brief Retrieve the temperature of the specified location on the
+ *        VEDA device in Celsius.
+ * @param tempC pointer to hold the temperature.
+ * @param idx location index on the VEDA device.
  * @param dev VEDA device ID.
  * @retval VEDA_SUCCESS on Success
  * @retval VEDA_ERROR_NOT_INITIALIZED VEDA library not initialized
+ * @retval VEDA_ERROR_INVALID_VALUE location index is invalid.
  * @retval VEDA_ERROR_INVALID_DEVICE VEDA device id is not valid.
  */
-VEDAresult vedaDeviceGetTemp(float* tempC, const int coreIdx, VEDAdevice dev) {
+VEDAresult vedaDeviceGetTemp(float* tempC, const int idx, VEDAdevice dev) {
 	GUARDED(
-		*tempC = veda::devices::get(dev).coreTemp(coreIdx);
-		L_TRACE("[ve:%i] vedaDeviceGetTemp(%f, %i, %i)", dev, *tempC, coreIdx, dev);
+		*tempC = veda::devices::get(dev).temp(idx);
+		L_TRACE("[ve:%i] vedaDeviceGetTemp(%f, %i, %i)", dev, *tempC, idx, dev);
 	)
 }
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring>
 #include <chrono>
+#include "veda_ft.h"
 
 #define NOW() std::chrono::high_resolution_clock::now()
 #define time(start, end) (std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()/1000000.0)
@@ -51,6 +52,7 @@ int main(int argc, char** argv) {
         	printf("FAILED\n");
                 exit(1);
 	}
+	int ve_get_arch = Get_VEDA_device_arch();
         printf("\nveraRuntimeGetVersion=%s\n",ver_str);
 	veraFunction_t func_ex;
 
@@ -71,11 +73,34 @@ int main(int argc, char** argv) {
 		printf("veraGetDeviceProperties(\"%s\", %i)\n", prop.name, 0);
 
         	printf("\nTEST CASE ID: FT_VERA_07:");
-		for(int i = 0; i < prop.multiProcessorCount; i++) {
-			float temp;
-			CHECK(veraDeviceGetTemp(&temp, i, dev));
-			printf("veraDeviceGetTemp(%f, %i, %i)\n", temp, i, dev);
+		if(ve_get_arch == 1) {
+			for(int i = -1; i < prop.multiProcessorCount; i++) {
+				float temp;
+				printf("veraDeviceGetTemp(%f, %i, %i)\n", temp, i, dev);
+				int res = veraDeviceGetTemp(&temp, i, dev);
+				if(i == -1 || i == 9) {
+						if(res != VEDA_ERROR_INVALID_VALUE) {
+						printf("FT_VERA_07 FAILED\n");
+						exit(0);
+					}
+					continue;
+				}
+			}
 		}
+		else {
+			int locations = 14;
+			for(int i = -1; i < locations; i++) {
+				float temp;
+                                int res = veraDeviceGetTemp(&temp, i, dev);
+                                printf("VE3: veraDeviceGetTemp(%f, %i, %i)\n", temp, i, dev);
+                                if(i == -1 || i == 13) {
+					if(res != VEDA_ERROR_INVALID_VALUE) {
+                                                printf("FT_VERA_07 FAILED\n");
+                                                exit(0);
+                                        }
+                                }
+                        }
+                }
         	printf("PASSED\n");
 
 		size_t memTotal = 0, memFree = 0;
